@@ -6,7 +6,10 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Order {
@@ -21,6 +24,7 @@ public class Order {
     private String city;
 
     @NotBlank(message="State is required")
+    @Size(min=2, max=2)
     private String state;
 
     @NotBlank(message="Zip code is required")
@@ -39,6 +43,15 @@ public class Order {
     //Chapter 3
     private Long id;
 
-    private Date createdAt;
+    private Date placedAt;
+
+    private List<Taco> tacos;
+
+    public void addDesign(Taco taco){
+        if(tacos == null) {
+            tacos = new ArrayList<>();
+        }
+        tacos.add(taco);
+    }
 
 }
