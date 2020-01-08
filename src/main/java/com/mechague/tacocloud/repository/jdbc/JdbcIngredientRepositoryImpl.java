@@ -1,4 +1,4 @@
-package com.mechague.tacocloud.data.jdbc;
+package com.mechague.tacocloud.repository.jdbc;
 
 import com.mechague.tacocloud.domain.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +41,16 @@ public class JdbcIngredientRepositoryImpl implements JdbcIngredientRepository{
 
     //If no method reference is used, you must do the RowMapper like this:
     /*@Override
-    public Ingredient findOne(String id) {
+    public IngredientEntity findOne(String id) {
         return jdbc.queryForObject(
-                "select id, name, type from Ingredient where id=?",
-                new RowMapper<Ingredient>() {
-                    public Ingredient mapRow(ResultSet rs, int rowNum)
+                "select id, name, type from IngredientEntity where id=?",
+                new RowMapper<IngredientEntity>() {
+                    public IngredientEntity mapRow(ResultSet rs, int rowNum)
                             throws SQLException {
-                        return new Ingredient(
+                        return new IngredientEntity(
                                 rs.getString("id"),
                                 rs.getString("name"),
-                                Ingredient.Type.valueOf(rs.getString("type")));
+                                IngredientEntity.Type.valueOf(rs.getString("type")));
                     };
                 }, id);
     }*/

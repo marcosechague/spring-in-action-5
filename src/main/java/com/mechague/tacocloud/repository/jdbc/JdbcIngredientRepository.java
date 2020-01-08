@@ -1,4 +1,4 @@
-package com.mechague.tacocloud.data.jdbc;
+package com.mechague.tacocloud.repository.jdbc;
 
 import com.mechague.tacocloud.domain.Ingredient;
 

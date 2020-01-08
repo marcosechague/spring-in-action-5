@@ -1,6 +1,7 @@
 package com.mechague.tacocloud.domain;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class Taco {
     @Size(min=5, message="Name must be at least 5 characters long")
     private String name;
 
+    @NotNull(message = "You must choose at least 1 ingredient")
     @Size(min=1, message="You must choose at least 1 ingredient")
     @ManyToMany(targetEntity = Ingredient.class)
     private List<Ingredient> ingredients;
@@ -26,6 +28,7 @@ public class Taco {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @CreatedDate
     private Date createdAt;
 
     @PrePersist

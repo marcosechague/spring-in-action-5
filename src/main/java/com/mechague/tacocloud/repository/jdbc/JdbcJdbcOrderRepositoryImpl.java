@@ -1,4 +1,4 @@
-package com.mechague.tacocloud.data.jdbc;
+package com.mechague.tacocloud.repository.jdbc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mechague.tacocloud.domain.Order;
@@ -46,7 +46,7 @@ public class JdbcJdbcOrderRepositoryImpl implements JdbcOrderRepository {
 
     private long saveOrderDetails(Order order) {
         @SuppressWarnings("unchecked")
-        //ObjectMapper is used to map the Order to a map with each attribute name like a key and value
+        //ObjectMapper is used to map the OrderEntity to a map with each attribute name like a key and value
         Map<String, Object> values =
                 objectMapper.convertValue(order, Map.class);
         //This is necessary because ObjectMapper would otherwise convert the Date property into a long

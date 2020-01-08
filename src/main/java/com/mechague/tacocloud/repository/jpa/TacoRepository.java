@@ -1,4 +1,4 @@
-package com.mechague.tacocloud.data;
+package com.mechague.tacocloud.repository.jpa;
 
 import com.mechague.tacocloud.domain.Taco;
 import org.springframework.data.repository.CrudRepository;

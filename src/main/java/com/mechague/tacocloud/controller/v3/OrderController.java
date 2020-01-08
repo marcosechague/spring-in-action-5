@@ -1,7 +1,7 @@
-package com.mechague.tacocloud.controller;
+package com.mechague.tacocloud.controller.v3;
 
-import com.mechague.tacocloud.data.jdbc.JdbcOrderRepository;
 import com.mechague.tacocloud.domain.Order;
+import com.mechague.tacocloud.repository.jpa.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.validation.Valid;
 
 @Slf4j
-@Controller
-@RequestMapping("/orders")
+@Controller("OrderControllerV3")
+@RequestMapping("/v3/orders")
 @SessionAttributes("order")
 public class OrderController {
 
-    private final JdbcOrderRepository orderRepo;
+    private final OrderRepository orderRepo;
 
-    public OrderController(JdbcOrderRepository orderRepo){
+    public OrderController(OrderRepository orderRepo){
         this.orderRepo = orderRepo;
     }
 
@@ -30,7 +30,7 @@ public class OrderController {
     @GetMapping("/current")
     public String orderForm(Model model) {
         //Not necessary because of the SessionAttribute order
-        //model.addAttribute("order", new Order());
+        //model.addAttribute("order", new OrderEntity());
         return "orderForm";
     }
 
@@ -39,7 +39,7 @@ public class OrderController {
         if (errors.hasErrors()) {
             return "orderForm";
         }
-        log.info("Order submitted: " + order);
+        log.info("OrderEntity submitted: " + order);
         orderRepo.save(order);
         sessionStatus.setComplete();
         return "redirect:/";
