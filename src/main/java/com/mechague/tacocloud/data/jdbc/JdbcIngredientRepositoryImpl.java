@@ -1,4 +1,4 @@
-package com.mechague.tacocloud.data;
+package com.mechague.tacocloud.data.jdbc;
 
 import com.mechague.tacocloud.domain.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class JdbcIngredientRepository implements IngredientRepository{
+public class JdbcIngredientRepositoryImpl implements JdbcIngredientRepository{
 
     private JdbcTemplate jdbc;
 
     @Autowired
-    public JdbcIngredientRepository(JdbcTemplate jdbc) {
+    public JdbcIngredientRepositoryImpl(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 

@@ -1,4 +1,4 @@
-package com.mechague.tacocloud.data;
+package com.mechague.tacocloud.data.jdbc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mechague.tacocloud.domain.Order;
@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class JdbcOrderRepository implements OrderRepository {
+public class JdbcJdbcOrderRepositoryImpl implements JdbcOrderRepository {
 
     private SimpleJdbcInsert orderInserter;
     private SimpleJdbcInsert orderTacoInserter;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public JdbcOrderRepository(JdbcTemplate jdbc) {
+    public JdbcJdbcOrderRepositoryImpl(JdbcTemplate jdbc) {
         this.orderInserter = new SimpleJdbcInsert(jdbc)
                 .withTableName("Taco_Order")
                 .usingGeneratedKeyColumns("id");

@@ -1,7 +1,12 @@
 package com.mechague.tacocloud.data;
 
 import com.mechague.tacocloud.domain.Order;
+import org.springframework.data.repository.CrudRepository;
 
-public interface OrderRepository {
-    Order save(Order order);
+import java.util.Date;
+import java.util.List;
+
+public interface OrderRepository extends CrudRepository<Order, Long>{
+    List<Order> findByZip(String deliveryZip);
+    List<Order> readOrdersByZipAndPlacedAtBetween(String deliveryZip, Date startDate, Date endDate);
 }

@@ -3,16 +3,20 @@ package com.mechague.tacocloud.domain;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class Order {
+@Entity
+@Table(name = "Taco_Order")
+public class Order implements Serializable {
 
     @NotBlank(message="Name is required")
     private String name;
@@ -41,10 +45,13 @@ public class Order {
     private String ccCVV;
 
     //Chapter 3
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Date placedAt;
 
+    @ManyToMany(targetEntity = Taco.class)
     private List<Taco> tacos;
 
     public void addDesign(Taco taco){
@@ -52,6 +59,11 @@ public class Order {
             tacos = new ArrayList<>();
         }
         tacos.add(taco);
+    }
+
+    @PrePersist
+    void placedAt() {
+        this.placedAt = new Date();
     }
 
 }

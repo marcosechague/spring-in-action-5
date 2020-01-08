@@ -1,11 +1,7 @@
 package com.mechague.tacocloud.data;
 
 import com.mechague.tacocloud.domain.Ingredient;
+import org.springframework.data.repository.CrudRepository;
 
-// Chaper 3
-public interface IngredientRepository {
-
-    Iterable<Ingredient> findAll();
-    Ingredient findOne(String id);
-    Ingredient save(Ingredient ingredient);
+public interface IngredientRepository extends CrudRepository <Ingredient, String> {
 }

@@ -1,6 +1,6 @@
 package com.mechague.tacocloud.controller;
 
-import com.mechague.tacocloud.data.OrderRepository;
+import com.mechague.tacocloud.data.jdbc.JdbcOrderRepository;
 import com.mechague.tacocloud.domain.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,9 +20,9 @@ import javax.validation.Valid;
 @SessionAttributes("order")
 public class OrderController {
 
-    private final OrderRepository orderRepo;
+    private final JdbcOrderRepository orderRepo;
 
-    public OrderController(OrderRepository orderRepo){
+    public OrderController(JdbcOrderRepository orderRepo){
         this.orderRepo = orderRepo;
     }
 

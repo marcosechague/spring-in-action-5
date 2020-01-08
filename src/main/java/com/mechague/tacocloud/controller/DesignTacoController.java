@@ -1,7 +1,7 @@
 package com.mechague.tacocloud.controller;
 
-import com.mechague.tacocloud.data.IngredientRepository;
-import com.mechague.tacocloud.data.TacoRepository;
+import com.mechague.tacocloud.data.jdbc.JdbcIngredientRepository;
+import com.mechague.tacocloud.data.jdbc.JdbcTacoRepository;
 import com.mechague.tacocloud.domain.Ingredient;
 import com.mechague.tacocloud.domain.Order;
 import com.mechague.tacocloud.domain.Taco;
@@ -21,17 +21,17 @@ import static com.mechague.tacocloud.domain.Ingredient.Type;
 
 @Slf4j
 @Controller
-@RequestMapping("/design")
+@RequestMapping("v1/design")
 //Specifies any model objects like the order attribute that should be kept in session and available across
 //multiple requests
 @SessionAttributes("order")
 public class DesignTacoController {
 
-    private final IngredientRepository ingredientRepo;
-    private final TacoRepository designRepo;
+    private final JdbcIngredientRepository ingredientRepo;
+    private final JdbcTacoRepository designRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo) {
+    public DesignTacoController(JdbcIngredientRepository ingredientRepo, JdbcTacoRepository designRepo) {
         this.ingredientRepo = ingredientRepo;
         this.designRepo = designRepo;
     }
