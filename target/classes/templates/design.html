@@ -15,13 +15,13 @@
     <form method="POST" th:object="${taco}">
         <div class="grid">
             <div class="ingredient-group" id="wraps">
-                <h3>Designate your wrap:</h3>
                 <div th:if="${#fields.hasErrors()}">
                     <span class="validationError">
                         Please correct the problems below and resubmit.
                     </span>
                 </div>
 
+                <h3>Designate your wrap:</h3>
                 <div th:each="ingredient : ${wrap}">
                     <input name="ingredients" type="checkbox" th:value="${ingredient.id}"
                     />
