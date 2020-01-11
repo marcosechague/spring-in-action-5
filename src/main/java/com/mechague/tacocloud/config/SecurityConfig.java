@@ -1,35 +1,86 @@
 package com.mechague.tacocloud.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import javax.sql.DataSource;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
+    /*private DataSource dataSource;
 
     public SecurityConfig(DataSource dataSource){
         this.dataSource = dataSource;
-    }
-
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/h2-console/**").permitAll();
-
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
     }*/
 
+    private UserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new StandardPasswordEncoder("53cr3t");
+    }
+
+    public SecurityConfig(@Qualifier(value = "userRepositoryUserDetailsService")
+                          UserDetailsService userDetailsService){
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth)
+            throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(encoder());
+    }
+
+    //Configuration to allow access to h2 console
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeRequests()
+                //base on SpEL
+                /*.antMatchers("/design", "/orders")
+                    .access("hasRole('USER')")
+                    .antMatchers("/", "/**")
+                    .access("permitAll")*/
+                .antMatchers("/h2-console/**")
+                    .permitAll()
+                .antMatchers("/v3/design", "/v3/orders")
+                //'ROLE_' is added automatically
+                    .hasRole("USER")
+                .antMatchers("/", "/**")
+                    .permitAll()
+                .and()
+                    .formLogin()
+                    .loginPage("/login")
+                    //The true is to force the user to the design page after login, even if they were
+                    //navigating elsewhere prior to logging in
+                    .defaultSuccessUrl("/v3/design", true)
+                    .loginProcessingUrl("/authenticate")
+                    .usernameParameter("user")
+                    .passwordParameter("pwd")
+                .and()
+                    .logout()
+                    .logoutSuccessUrl("/")
+                //Only to allow access to h2-console
+                .and()
+                    .csrf()
+                    .ignoringAntMatchers("/h2-console/**")
+                .and()
+                    .headers()
+                    .frameOptions()
+                    .sameOrigin();
+    }
+
+
+    /*@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
@@ -39,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery(
                         "select username, authority from UserAuthorities " +
                                 "where username=?");
-    }
+    }*/
 
     //For in memory auth
     /*@Override
