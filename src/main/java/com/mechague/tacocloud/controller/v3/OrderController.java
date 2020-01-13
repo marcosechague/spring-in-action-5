@@ -2,8 +2,11 @@ package com.mechague.tacocloud.controller.v3;
 
 import com.mechague.tacocloud.domain.Order;
 import com.mechague.tacocloud.domain.User;
+import com.mechague.tacocloud.properties.OrderProps;
 import com.mechague.tacocloud.repository.jpa.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +26,12 @@ import javax.validation.Valid;
 public class OrderController {
 
     private final OrderRepository orderRepo;
+    private OrderProps orderProps;
 
-    public OrderController(OrderRepository orderRepo){
+    public OrderController(OrderRepository orderRepo, OrderProps orderProps){
         this.orderRepo = orderRepo;
+        this.orderProps = orderProps;
     }
-
 
     @GetMapping("/current")
     public String orderForm(Model model) {
@@ -50,6 +54,15 @@ public class OrderController {
         orderRepo.save(order);
         sessionStatus.setComplete();
         return "redirect:/";
+    }
+
+    @GetMapping
+    public String ordersForUser(
+            @AuthenticationPrincipal User user, Model model) {
+        Pageable pageable = PageRequest.of(0, orderProps.getPageSize());
+        model.addAttribute("orders",
+                orderRepo.findByUserOrderByPlacedAtDesc(user, pageable));
+        return "orderList";
     }
 
 

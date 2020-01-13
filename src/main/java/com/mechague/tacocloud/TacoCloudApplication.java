@@ -10,4 +10,12 @@ public class TacoCloudApplication {
         SpringApplication.run(TacoCloudApplication.class, args);
     }
 
+
+    /*@Bean
+    @Profile("!prod")
+    public CommandLineRunner dataLoader(IngredientRepository repo,
+                                        UserRepository userRepo, PasswordEncoder encoder) {
+        return null;
+    }*/
+
 }
