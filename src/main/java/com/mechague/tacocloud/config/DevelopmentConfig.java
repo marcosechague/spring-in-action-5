@@ -24,11 +24,7 @@ public class DevelopmentConfig {
                 .username("mechague")
                 .build();
 
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... args) throws Exception {
-                userRepo.save(user);
-            }
-        };
+        return args -> userRepo.save(user);
+
     }
 }

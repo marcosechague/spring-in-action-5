@@ -14,15 +14,15 @@ import java.util.Collections;
 
 @Entity
 @Data
+@NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
+@AllArgsConstructor
 @Builder
-@RequiredArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PRIVATE, force=true)
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    private  String username;
+    private String username;
     private String password;
     private String fullname;
     private String street;
