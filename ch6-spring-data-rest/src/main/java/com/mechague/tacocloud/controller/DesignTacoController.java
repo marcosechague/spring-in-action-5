@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,13 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
     private final TacoRepository tacoRepo;
-    //@Autowired
-    //EntityLinks entityLinks;
+    private EntityLinks entityLinks;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo) {
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo, EntityLinks entityLinks) {
         this.ingredientRepo = ingredientRepo;
         this.tacoRepo = designRepo;
+        this.entityLinks = entityLinks;
     }
 
     @GetMapping("/{id}")
@@ -54,17 +55,7 @@ public class DesignTacoController {
         List<Taco> tacos = tacoRepo.findAll(page).getContent();
 
 
-        /*List<TacoResource> tacoResources =
-                new TacoResourceAssembler().toResources(tacos);
-        Resources<TacoResource> recentResources =
-                new Resources<TacoResource>(tacoResources);
-        recentResources.add(
-                linkTo(methodOn(DesignTacoController.class).recentTacos())
-                        .withRel("recents"));*/
-
         CollectionModel<TacoModel> tacoModels = new TacoModelAssembler().toCollectionModel(tacos);
-
-        //CollectionModel<EntityModel<Taco>> recentResources = CollectionModel.(tacoModels);
 
         tacoModels.add(
                 linkTo(methodOn(DesignTacoController.class).recentTacos())
