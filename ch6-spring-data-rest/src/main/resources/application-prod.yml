@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: mysql://localhost/tacocloud
+    username: tacouser
+    password: tacopassword
+server:
+  port: 8080
+logging:
+  level:
+    com.mechague.tacocloud: WARN
