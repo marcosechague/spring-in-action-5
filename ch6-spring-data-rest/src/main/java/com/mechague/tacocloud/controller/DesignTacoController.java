@@ -47,7 +47,7 @@ public class DesignTacoController {
     }
 
     //only if header Accept is application/json
-    @GetMapping(value = "/recent", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/history/recent", produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<TacoModel> recentTacos() {
         PageRequest page = PageRequest.of(
                 0, 12, Sort.by("createdAt").descending());

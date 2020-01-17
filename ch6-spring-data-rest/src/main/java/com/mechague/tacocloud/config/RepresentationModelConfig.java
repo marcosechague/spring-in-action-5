@@ -19,8 +19,13 @@ public class RepresentationModelConfig {
             public PagedModel<EntityModel<Taco>> process(PagedModel<EntityModel<Taco>> model) {
                 model.add(
                         links.linkFor(Taco.class)
+                                .slash("history")
                                 .slash("recent")
                                 .withRel("recents"));
+                /*links.linkFor(Taco.class)
+                        .withSelfRel()
+                        .withHref("http://localhost:9090/design-recent")
+                        .withRel("recents"));*/
                 return model;
             }
         };

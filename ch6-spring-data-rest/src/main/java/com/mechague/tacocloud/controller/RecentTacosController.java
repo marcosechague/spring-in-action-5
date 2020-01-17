@@ -27,7 +27,7 @@ public class RecentTacosController {
         this.tacoRepo = tacoRepo;
     }
 
-    @GetMapping(path="/tacos/recent", produces= MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path="tacos/history/recent")
     //ResponseEntity or @ResponseBody is required when use @RepositoryRestController to tell that is a REST response
     public ResponseEntity<CollectionModel<TacoModel>> recentTacos() {
         PageRequest page = PageRequest.of(

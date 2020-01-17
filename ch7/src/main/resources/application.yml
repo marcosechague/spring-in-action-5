@@ -8,7 +8,7 @@ spring:
     rest:
       base-path: /api
 server:
-  port: 9090
+  port: 8585
 logging:
   file:
     name: TacoCloud.log

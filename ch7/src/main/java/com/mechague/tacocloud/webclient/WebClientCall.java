@@ -7,6 +7,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@Component
 public class WebClientCall {
 
     private RestTemplate rest;
@@ -25,104 +28,176 @@ public class WebClientCall {
         this.traverson = traverson;
     }
 
-    public Ingredient getIngredientByIdUsingObject(String ingredientId) {
-        return rest.getForObject("http://localhost:8080/ingredients/{id}",
-                Ingredient.class, ingredientId);
+    private Ingredient getIngredientByIdUsingObject(String ingredientId) {
+        Ingredient ingredient = null;
+        try{
+            ingredient = rest.getForObject("http://localhost:9090/api/ingredients/{id}",
+                    Ingredient.class, ingredientId);
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return ingredient;
     }
 
-    public Ingredient getIngredientById(String ingredientId) {
-        Map<String,String> urlVariables = new HashMap<>();
-        urlVariables.put("id", ingredientId);
-        return rest.getForObject("http://localhost:8080/ingredients/{id}",
-                Ingredient.class, urlVariables);
+    private Ingredient getIngredientById(String ingredientId) {
+        Ingredient ingredient = null;
+        try {
+            Map<String, String> urlVariables = new HashMap<>();
+            urlVariables.put("id", ingredientId);
+            ingredient = rest.getForObject("http://localhost:9090/api/ingredients/{id}",
+                    Ingredient.class, urlVariables);
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return ingredient;
     }
 
-    public Ingredient getIngredientByIdUsingEntity(String ingredientId) {
-        ResponseEntity<Ingredient> responseEntity =
-                rest.getForEntity("http://localhost:8080/ingredients/{id}",
-                        Ingredient.class, ingredientId);
-        log.info("Fetched time: " +
-                responseEntity.getHeaders().getDate());
-        return responseEntity.getBody();
+    private Ingredient getIngredientByIdUsingEntity(String ingredientId) {
+        Ingredient ingredient = null;
+        try {
+            ResponseEntity<Ingredient> responseEntity =
+                    rest.getForEntity("http://localhost:9090/api/ingredients/{id}",
+                            Ingredient.class, ingredientId);
+            log.info("Fetched time: " +
+                    responseEntity.getHeaders().getDate());
+            ingredient = responseEntity.getBody();
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return ingredient;
+
     }
 
-    public void updateIngredient(Ingredient ingredient) {
-        rest.put("http://localhost:8080/ingredients/{id}",
-                ingredient,
-                ingredient.getId());
+    private void updateIngredient(Ingredient ingredient) {
+        try {
+            rest.put("http://localhost:9090/api/ingredients/{id}",
+                    ingredient,
+                    ingredient.getId());
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
     }
 
-    public void deleteIngredient(String ingredientId) {
-        rest.delete("http://localhost:8080/ingredients/{id}",
+    private void deleteIngredient(String ingredientId) {
+        try{
+            rest.delete("http://localhost:9090/api/ingredients/{id}",
                 ingredientId);
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
     }
 
-    public Ingredient createIngredientUsingObject(Ingredient ingredient) {
-        return rest.postForObject("http://localhost:8080/ingredients",
+    private Ingredient createIngredientUsingObject(Ingredient ingredient) {
+        Ingredient ingredientCreated = null;
+        try{
+            ingredientCreated = rest.postForObject("http://localhost:9090/api/ingredients",
                 ingredient,
                 Ingredient.class);
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return  ingredientCreated;
     }
 
-    public URI createIngredientUsingLocation(Ingredient ingredient) {
-        return rest.postForLocation("http://localhost:8080/ingredients",
-                ingredient);
+    private URI createIngredientUsingLocation(Ingredient ingredient) {
+        URI location = null;
+        try {
+            location = rest.postForLocation("http://localhost:9090/api/ingredients",
+                    ingredient);
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return location;
     }
 
-    public Ingredient createIngredientUsingEntity(Ingredient ingredient) {
-        ResponseEntity<Ingredient> responseEntity =
-                rest.postForEntity("http://localhost:8080/ingredients",
-                        ingredient,
-                        Ingredient.class);
-        log.info("New resource created at " +
-                responseEntity.getHeaders().getLocation());
-        return responseEntity.getBody();
+    private Ingredient createIngredientUsingEntity(Ingredient ingredient) {
+
+        Ingredient ingredientCreated = null;
+        try{
+            ResponseEntity<Ingredient> responseEntity =
+                    rest.postForEntity("http://localhost:9090/api/ingredients",
+                            ingredient,
+                            Ingredient.class);
+            log.info("New resource created at " +
+                    responseEntity.getHeaders().getLocation());
+            ingredientCreated = responseEntity.getBody();
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return  ingredientCreated;
     }
 
-    public Collection<Ingredient> getAllIngretientsTraverson(){
-        ParameterizedTypeReference<CollectionModel<Ingredient>> ingredientType =
-                new ParameterizedTypeReference<CollectionModel<Ingredient>>() {};
+    private Collection<Ingredient> getAllIngretientsTraverson(){
 
-        CollectionModel<Ingredient> ingredientRes = traverson
-                .follow("ingredients")
-                .toObject(ingredientType);
+        Collection<Ingredient> ingredients = null;
 
-        return  ingredientRes.getContent();
+        try{
+            ParameterizedTypeReference<CollectionModel<Ingredient>> ingredientType =
+                    new ParameterizedTypeReference<CollectionModel<Ingredient>>() {};
+
+            CollectionModel<Ingredient> ingredientRes = traverson
+                    .follow("ingredients")
+                    .toObject(ingredientType);
+
+            ingredients = ingredientRes.getContent();
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return  ingredients;
+
 
     }
 
-    public Collection<Taco> getRecentTacosTraverson(){
-        ParameterizedTypeReference<CollectionModel<Taco>> tacoType =
-                new ParameterizedTypeReference<CollectionModel<Taco>>() {};
+    private Collection<Taco> getRecentTacosTraverson(){
+        Collection<Taco> recentTacos = null;
+        try{
+            ParameterizedTypeReference<CollectionModel<Taco>> tacoType =
+                    new ParameterizedTypeReference<CollectionModel<Taco>>() {};
 
-        CollectionModel<Taco> tacosRes = traverson
-                .follow("tacos")
-                .follow("recents")
-                .toObject(tacoType);
+            CollectionModel<Taco> tacosRes = traverson
+                    .follow("tacos")
+                    .follow("recents")
+                    .toObject(tacoType);
 
-        return  tacosRes.getContent();
+            recentTacos =  tacosRes.getContent();
+        }catch (RestClientException e){
+            log.error("Error executing call", e);
+        }
+        return recentTacos;
+
     }
 
-    public Ingredient addIngredient(Ingredient ingredient) {
-        String ingredientsUrl = traverson
-                .follow("ingredients")
-                .asLink()
-                .getHref();
-        return rest.postForObject(ingredientsUrl,
-                ingredient,
-                Ingredient.class);
+    private Ingredient addIngredientTraverson(Ingredient ingredient) {
+        Ingredient ingredientCreated = null;
+        try {
+            String ingredientsUrl = traverson
+                    .follow("ingredients")
+                    .asLink()
+                    .getHref();
+            ingredientCreated = rest.postForObject(ingredientsUrl,
+                    ingredient,
+                    Ingredient.class);
+
+        }catch (RestClientException e){
+            log.error("Error executing call");
+        }
+        return ingredientCreated;
     }
 
     public void makeCalls(){
         getIngredientByIdUsingObject("FLTO");
         getIngredientById("FLTO");
         getIngredientByIdUsingEntity("FLTO");
-        updateIngredient();
+        updateIngredient(new Ingredient("TMTO", "Tomatoes", Ingredient.Type.WRAP));
         deleteIngredient("SRCR");
-        createIngredientUsingObject(new Ingredient("LIME", "Lime", Ingredient.Type.SAUCE );
-        createIngredientUsingLocation(null);
-        createIngredientUsingEntity(null);
-        Colle getAllIngretientsTraverson();
-        addIngredient
+        createIngredientUsingObject(new Ingredient("LIME", "Lime", Ingredient.Type.SAUCE ));
+        createIngredientUsingLocation(new Ingredient("CORN", "Corn Tortilla", Ingredient.Type.WRAP ));
+        createIngredientUsingEntity(new Ingredient("CUMI", "Cumin", Ingredient.Type.SAUCE ));
+        addIngredientTraverson(new Ingredient("CHIL", "Chili powder", Ingredient.Type.SAUCE ));
+        Collection<Ingredient> ingredientsByTraverson = getAllIngretientsTraverson();
+        log.info("Ingredients by traverson", ingredientsByTraverson);
+        Collection<Taco> recentTacosByTraverson = getRecentTacosTraverson();
+        log.info("Recent tacos by traverson", recentTacosByTraverson);
     }
 
 
